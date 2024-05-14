@@ -48,10 +48,40 @@ const Company = sq.define('company', {
   });
 
 
+  const EmployeeTransaction = sq.define('employee_transaction', {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
+    employee_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+    },
+    transaction_date: {
+        type: DataTypes.DATE,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.STRING(500),
+      allowNull: false
+    },
+  }, {
+    tableName: 'employee_transaction',
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+  });
+
+
 Employee.belongsTo(Company, { foreignKey: 'company_id', targetKey: 'id', onDelete: 'RESTRICT', onUpdate: 'CASCADE' });
 Company.hasMany(Employee, { foreignKey: 'company_id', sourceKey: 'id' });
 
+EmployeeTransaction.belongsTo(Employee, { foreignKey: 'employee_id', targetKey: 'id', onDelete: 'RESTRICT', onUpdate: 'CASCADE' });
+Employee.hasMany(EmployeeTransaction, { foreignKey: 'employee_id', sourceKey: 'id' });
+
 module.exports = {
     Employee,
-    Company
+    Company,
+    EmployeeTransaction
 };
